@@ -115,22 +115,93 @@ class AsyncDataverseClient:
                 keepalive_expiry=self.config.get("keepalive_expiry", 30),
             )
             
+            # Configure proxy settings
+            proxy = None
+            proxy_url = self.config.get("proxy_url")
+            if proxy_url:
+                proxy_username = self.config.get("proxy_username")
+                proxy_password = self.config.get("proxy_password")
+                
+                if proxy_username and proxy_password:
+                    # Add auth to proxy URL
+                    from urllib.parse import urlparse, urlunparse
+                    parsed = urlparse(proxy_url)
+                    auth_proxy_url = urlunparse((
+                        parsed.scheme,
+                        f"{proxy_username}:{proxy_password}@{parsed.netloc}",
+                        parsed.path,
+                        parsed.params,
+                        parsed.query,
+                        parsed.fragment
+                    ))
+                    proxy = auth_proxy_url
+                else:
+                    proxy = proxy_url
+            
+            # Configure SSL/TLS settings
+            verify_ssl = self.config.get("verify_ssl", True)
+            ssl_context = self.config.get("ssl_context")
+            ssl_cert_file = self.config.get("ssl_cert_file")
+            ssl_key_file = self.config.get("ssl_key_file")
+            ssl_ca_bundle = self.config.get("ssl_ca_bundle")
+            
+            # Handle SSL verification
+            if not verify_ssl:
+                verify = False
+                # Disable SSL warnings if requested
+                if self.config.get("disable_ssl_warnings", False):
+                    import urllib3
+                    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            elif ssl_ca_bundle:
+                verify = ssl_ca_bundle
+            else:
+                verify = True
+            
+            # Handle client certificates
+            cert = None
+            if ssl_cert_file:
+                if ssl_key_file:
+                    cert = (ssl_cert_file, ssl_key_file)
+                else:
+                    cert = ssl_cert_file
+            
             # Create HTTP client
-            self._client = httpx.AsyncClient(
-                timeout=timeout,
-                limits=limits,
-                follow_redirects=True,
-                headers={
+            client_kwargs = {
+                "timeout": timeout,
+                "limits": limits,
+                "follow_redirects": True,
+                "verify": verify,
+                "trust_env": self.config.get("trust_env", True),
+                "headers": {
                     "User-Agent": "dataverse-sdk/1.0.0",
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                     "OData-MaxVersion": "4.0",
                     "OData-Version": "4.0",
                 },
-            )
+            }
+            
+            # Add proxy configuration
+            if proxy:
+                client_kwargs["proxy"] = proxy
+            
+            # Add client certificate
+            if cert:
+                client_kwargs["cert"] = cert
+            
+            # Add custom SSL context if provided
+            if ssl_context:
+                client_kwargs["verify"] = ssl_context
+            
+            self._client = httpx.AsyncClient(**client_kwargs)
             
             self._closed = False
-            logger.debug("HTTP client initialized")
+            logger.debug(
+                "HTTP client initialized",
+                proxy_configured=bool(proxy),
+                ssl_verification=verify_ssl,
+                client_cert=bool(cert),
+            )
     
     async def close(self) -> None:
         """Close the HTTP client and cleanup resources."""

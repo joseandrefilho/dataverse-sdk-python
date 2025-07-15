@@ -55,6 +55,23 @@ class Config:
             "default_batch_size": 100,
             "max_batch_size": 1000,
             
+            # Proxy settings
+            "proxy_url": None,
+            "proxy_username": None,
+            "proxy_password": None,
+            "proxy_auth": None,
+            
+            # SSL/TLS settings
+            "verify_ssl": True,
+            "ssl_cert_file": None,
+            "ssl_key_file": None,
+            "ssl_ca_bundle": None,
+            "ssl_context": None,
+            
+            # Corporate environment settings
+            "trust_env": True,  # Trust environment proxy settings
+            "disable_ssl_warnings": False,
+            
             # Logging
             "log_level": "INFO",
             "log_format": "json",
@@ -88,6 +105,24 @@ class Config:
             "RETRY_STATUS_CODES": ("retry_status_codes", lambda x: [int(i) for i in x.split(",")]),
             "DEFAULT_BATCH_SIZE": ("default_batch_size", int),
             "MAX_BATCH_SIZE": ("max_batch_size", int),
+            
+            # Proxy settings
+            "PROXY_URL": ("proxy_url", str),
+            "HTTP_PROXY": ("proxy_url", str),  # Standard environment variable
+            "HTTPS_PROXY": ("proxy_url", str),  # Standard environment variable
+            "PROXY_USERNAME": ("proxy_username", str),
+            "PROXY_PASSWORD": ("proxy_password", str),
+            
+            # SSL settings
+            "VERIFY_SSL": ("verify_ssl", lambda x: x.lower() not in ("false", "0", "no", "off")),
+            "SSL_CERT_FILE": ("ssl_cert_file", str),
+            "SSL_KEY_FILE": ("ssl_key_file", str),
+            "SSL_CA_BUNDLE": ("ssl_ca_bundle", str),
+            "REQUESTS_CA_BUNDLE": ("ssl_ca_bundle", str),  # Standard environment variable
+            "CURL_CA_BUNDLE": ("ssl_ca_bundle", str),  # Standard environment variable
+            "TRUST_ENV": ("trust_env", lambda x: x.lower() in ("true", "1", "yes")),
+            "DISABLE_SSL_WARNINGS": ("disable_ssl_warnings", lambda x: x.lower() in ("true", "1", "yes")),
+            
             "LOG_LEVEL": ("log_level", str),
             "LOG_FORMAT": ("log_format", str),
             "ENABLE_TELEMETRY": ("enable_telemetry", lambda x: x.lower() in ("true", "1", "yes")),

@@ -147,8 +147,9 @@ def format_output(data: Any, format_type: str = "table") -> None:
 
 
 # Global options callback
-@app.callback()
+@app.callback(invoke_without_command=True)
 def main(
+    ctx: typer.Context,
     config_file: Optional[Path] = typer.Option(
         None,
         "--config-file",
@@ -167,13 +168,79 @@ def main(
         "-v",
         help="Enable verbose output",
     ),
+    version: bool = typer.Option(
+        False,
+        "--version",
+        help="Show version information",
+    ),
 ) -> None:
     """Microsoft Dataverse SDK CLI."""
     cli_config.config_file = config_file
     cli_config.output_format = output_format
     cli_config.verbose = verbose
     
+    if version:
+        show_version()
+        raise typer.Exit()
+    
+    # If no command is provided, show help
+    if ctx.invoked_subcommand is None:
+        console.print(ctx.get_help())
+        raise typer.Exit()
+    
     load_config(config_file)
+
+
+def show_version() -> None:
+    """Display version information."""
+    try:
+        # Try to get version from installed package
+        import pkg_resources
+        try:
+            version = pkg_resources.get_distribution("crmadminbrasil-dataverse-sdk").version
+        except pkg_resources.DistributionNotFound:
+            # Fallback to reading from pyproject.toml if in development
+            import tomllib
+            pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+            if pyproject_path.exists():
+                with open(pyproject_path, "rb") as f:
+                    pyproject_data = tomllib.load(f)
+                version = pyproject_data.get("project", {}).get("version", "unknown")
+            else:
+                version = "unknown"
+    except ImportError:
+        # If tomllib is not available (Python < 3.11), try tomli
+        try:
+            import tomli
+            pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+            if pyproject_path.exists():
+                with open(pyproject_path, "rb") as f:
+                    pyproject_data = tomli.load(f)
+                version = pyproject_data.get("project", {}).get("version", "unknown")
+            else:
+                version = "unknown"
+        except ImportError:
+            version = "unknown"
+    
+    console.print(f"[bold blue]Dataverse SDK CLI[/bold blue]")
+    console.print(f"Version: [green]{version}[/green]")
+    console.print(f"Package: [cyan]crmadminbrasil-dataverse-sdk[/cyan]")
+    
+    # Show additional system information if verbose
+    if cli_config.verbose:
+        import platform
+        import sys
+        console.print(f"\n[dim]System Information:[/dim]")
+        console.print(f"Python: {sys.version}")
+        console.print(f"Platform: {platform.platform()}")
+        console.print(f"Architecture: {platform.architecture()[0]}")
+
+
+# Add version command as well
+@app.command("version")
+def version_command() -> None:
+    """Show version information."""
+    show_version()
 
 
 # Configuration commands

@@ -1,96 +1,48 @@
-# Microsoft Dataverse SDK - Documentação
+# 📚 Documentação - Dataverse SDK
 
-Bem-vindo à documentação completa do **crmadminbrasil-dataverse-sdk**, um SDK Python moderno e assíncrono para Microsoft Dataverse.
+Bem-vindo à documentação completa do Dataverse SDK! Esta pasta contém toda a documentação organizada do projeto.
 
-## 📚 Índice da Documentação
+## 📁 **Estrutura da Documentação**
 
-### 🚀 [Getting Started](getting-started/)
-- [Instalação](getting-started/installation.md)
-- [Configuração Inicial](getting-started/configuration.md)
-- [Primeiro Uso](getting-started/quickstart.md)
-- [Autenticação](getting-started/authentication.md)
+### **🚀 Getting Started**
+- [`installation.md`](getting-started/installation.md) - Guia de instalação
+- [`quickstart.md`](getting-started/quickstart.md) - Início rápido
 
-### 📖 [Tutoriais](tutorials/)
-- [Tutorial Básico: CRUD Operations](tutorials/basic-crud.md)
-- [Tutorial Avançado: Bulk Operations](tutorials/bulk-operations.md)
-- [Tutorial: FetchXML Queries](tutorials/fetchxml-queries.md)
-- [Tutorial: CLI Usage](tutorials/cli-usage.md)
-- [Tutorial: Hooks e Extensibilidade](tutorials/hooks-extensibility.md)
+### **📖 Guides**
+- [`aws-glue-integration.md`](guides/aws-glue-integration.md) - Integração com AWS Glue
+- [`corporate-environments.md`](guides/corporate-environments.md) - Ambientes corporativos
 
-### 📋 [Guias](guides/)
-- [Melhores Práticas](guides/best-practices.md)
-- [Performance e Otimização](guides/performance.md)
-- [Tratamento de Erros](guides/error-handling.md)
-- [Configuração Avançada](guides/advanced-configuration.md)
-- [Deployment em Produção](guides/production-deployment.md)
+### **🎓 Tutorials**
+- [`real-world-etl-scenarios.md`](tutorials/real-world-etl-scenarios.md) - Cenários ETL reais
 
-### 🔧 [Referência da API](api-reference/)
-- [DataverseSDK](api-reference/dataverse-sdk.md)
-- [AsyncDataverseClient](api-reference/async-client.md)
-- [Modelos de Dados](api-reference/models.md)
-- [Exceções](api-reference/exceptions.md)
-- [Utilitários](api-reference/utilities.md)
+### **📋 API Reference**
+- [`dataverse-sdk.md`](api-reference/dataverse-sdk.md) - Referência completa da API
 
-### 💡 [Exemplos](examples/)
-- [Exemplos Básicos](examples/basic-examples.md)
-- [Exemplos Avançados](examples/advanced-examples.md)
-- [Casos de Uso Reais](examples/real-world-examples.md)
-- [Integração com Frameworks](examples/framework-integration.md)
+### **🤝 Contributing**
+- [`CONTRIBUTING.md`](contributing/CONTRIBUTING.md) - Guia de contribuição
+- [`PROJECT_SUMMARY.md`](contributing/PROJECT_SUMMARY.md) - Resumo do projeto
+- [`PYPI_PUBLICATION_GUIDE.md`](contributing/PYPI_PUBLICATION_GUIDE.md) - Guia de publicação
 
-### 🔍 [Troubleshooting](troubleshooting/)
-- [Problemas Comuns](troubleshooting/common-issues.md)
-- [Debugging](troubleshooting/debugging.md)
-- [FAQ](troubleshooting/faq.md)
-- [Suporte](troubleshooting/support.md)
+### **🚀 Deployment**
+- [`CORPORATE_SETUP_GUIDE.md`](deployment/CORPORATE_SETUP_GUIDE.md) - Configuração corporativa
 
-## 🎯 Links Rápidos
+### **🌐 Jekyll Site**
+- [`jekyll/`](jekyll/) - Site GitHub Pages
 
-- **PyPI Package**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
-- **GitHub Repository**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk
-- **Issues & Bug Reports**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/issues
-- **Discussions**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/discussions
+## 🔗 **Links Rápidos**
 
-## 📦 Instalação Rápida
+- **[Instalação](getting-started/installation.md)** - Como instalar o SDK
+- **[Início Rápido](getting-started/quickstart.md)** - Primeiros passos
+- **[Configuração Corporativa](deployment/CORPORATE_SETUP_GUIDE.md)** - Para ambientes empresariais
+- **[Contribuição](contributing/CONTRIBUTING.md)** - Como contribuir
+- **[API Reference](api-reference/dataverse-sdk.md)** - Documentação técnica
 
-```bash
-pip install crmadminbrasil-dataverse-sdk
-```
+## 📊 **Índice Completo**
 
-## 🚀 Uso Rápido
-
-```python
-import asyncio
-from dataverse_sdk import DataverseSDK
-
-async def main():
-    sdk = DataverseSDK()
-    
-    async with sdk:
-        # Criar uma conta
-        account_id = await sdk.create("accounts", {
-            "name": "Minha Empresa"
-        })
-        
-        # Consultar contas
-        accounts = await sdk.query("accounts", {
-            "select": ["name"],
-            "top": 10
-        })
-        
-        print(f"Criada conta: {account_id}")
-        print(f"Total de contas: {len(accounts.value)}")
-
-asyncio.run(main())
-```
-
-## 🆘 Precisa de Ajuda?
-
-1. **Consulte a documentação** - Comece com [Getting Started](getting-started/)
-2. **Veja os exemplos** - Confira [Examples](examples/)
-3. **Problemas?** - Consulte [Troubleshooting](troubleshooting/)
-4. **Ainda com dúvidas?** - Abra uma [issue](https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/issues)
+Para uma visão completa de toda a documentação disponível, consulte:
+- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - Índice completo
 
 ---
 
-**Desenvolvido com ❤️ por José André Filho**
+**💡 Dica**: Use a navegação acima para encontrar rapidamente o que você precisa!
 

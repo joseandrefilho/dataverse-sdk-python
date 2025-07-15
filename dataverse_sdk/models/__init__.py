@@ -74,7 +74,7 @@ class Entity(BaseModel):
     version_number: Optional[int] = Field(None, alias="versionnumber")
     
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True  # Renamed from allow_population_by_field_name in Pydantic v2
         extra = "allow"  # Allow additional fields for dynamic entities
     
     @validator("id")
@@ -149,7 +149,7 @@ class QueryResult(BaseModel):
     context: Optional[str] = Field(None, alias="@odata.context")
     
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True  # Renamed from allow_population_by_field_name in Pydantic v2
     
     @property
     def has_more(self) -> bool:
@@ -357,7 +357,7 @@ class Account(Entity):
     email_address1: Optional[str] = Field(None, alias="emailaddress1")
     
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True  # Renamed from allow_population_by_field_name in Pydantic v2
 
 
 class Contact(Entity):
@@ -370,7 +370,7 @@ class Contact(Entity):
     telephone1: Optional[str] = None
     
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True  # Renamed from allow_population_by_field_name in Pydantic v2
 
 
 # Convenience exports

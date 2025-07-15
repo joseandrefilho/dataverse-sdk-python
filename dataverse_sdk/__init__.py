@@ -94,6 +94,17 @@ class DataverseSDK:
         scope: Optional[str] = None,
         config: Optional[Config] = None,
         hook_manager: Optional[HookManager] = None,
+        # Proxy settings
+        proxy_url: Optional[str] = None,
+        proxy_username: Optional[str] = None,
+        proxy_password: Optional[str] = None,
+        # SSL settings
+        verify_ssl: Optional[bool] = None,
+        ssl_cert_file: Optional[str] = None,
+        ssl_key_file: Optional[str] = None,
+        ssl_ca_bundle: Optional[str] = None,
+        disable_ssl_warnings: Optional[bool] = None,
+        trust_env: Optional[bool] = None,
     ) -> None:
         """
         Initialize the Dataverse SDK.
@@ -107,6 +118,19 @@ class DataverseSDK:
             scope: OAuth scope (optional)
             config: Configuration object (optional)
             hook_manager: Hook manager for extensibility (optional)
+            
+            # Proxy settings (for corporate environments)
+            proxy_url: Proxy server URL (e.g., "http://proxy.company.com:8080")
+            proxy_username: Proxy authentication username
+            proxy_password: Proxy authentication password
+            
+            # SSL settings (for corporate environments)
+            verify_ssl: Whether to verify SSL certificates (default: True)
+            ssl_cert_file: Path to client certificate file
+            ssl_key_file: Path to client private key file
+            ssl_ca_bundle: Path to CA bundle file for SSL verification
+            disable_ssl_warnings: Whether to disable SSL warnings (default: False)
+            trust_env: Whether to trust environment proxy settings (default: True)
         """
         # Try to load configuration from file if not provided
         config_data = {}
@@ -141,8 +165,37 @@ class DataverseSDK:
                 "dataverse-config.json file in the current directory."
             )
         
+        # Initialize configuration with corporate environment settings
+        config_overrides = {}
+        
+        # Apply proxy settings
+        if proxy_url is not None:
+            config_overrides["proxy_url"] = proxy_url
+        if proxy_username is not None:
+            config_overrides["proxy_username"] = proxy_username
+        if proxy_password is not None:
+            config_overrides["proxy_password"] = proxy_password
+        
+        # Apply SSL settings
+        if verify_ssl is not None:
+            config_overrides["verify_ssl"] = verify_ssl
+        if ssl_cert_file is not None:
+            config_overrides["ssl_cert_file"] = ssl_cert_file
+        if ssl_key_file is not None:
+            config_overrides["ssl_key_file"] = ssl_key_file
+        if ssl_ca_bundle is not None:
+            config_overrides["ssl_ca_bundle"] = ssl_ca_bundle
+        if disable_ssl_warnings is not None:
+            config_overrides["disable_ssl_warnings"] = disable_ssl_warnings
+        if trust_env is not None:
+            config_overrides["trust_env"] = trust_env
+        
         # Initialize components
-        self.config = config or Config()
+        self.config = config or Config(**config_overrides)
+        if config_overrides and config:
+            # Apply overrides to existing config
+            self.config.update(**config_overrides)
+        
         self.hook_manager = hook_manager or HookManager()
         
         # Initialize authenticator
@@ -175,6 +228,8 @@ class DataverseSDK:
             dataverse_url=self.dataverse_url,
             client_id=self.client_id,
             tenant_id=self.tenant_id,
+            proxy_configured=bool(self.config.get("proxy_url")),
+            ssl_verification=self.config.get("verify_ssl", True),
         )
     
     async def __aenter__(self) -> "DataverseSDK":

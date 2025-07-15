@@ -179,3 +179,11 @@ test_data/
 temp/
 downloads/
 
+
+# Benchmark results
+benchmarks/*.json
+benchmarks/*.html
+benchmarks/*.png
+benchmarks/*.csv
+benchmarks/reports/
+
