@@ -1,0 +1,295 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  validate-tag:
+    name: Validate Release Tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      is_prerelease: ${{ steps.check_prerelease.outputs.is_prerelease }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Get version from tag
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+    
+    - name: Check if prerelease
+      id: check_prerelease
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        if [[ $VERSION =~ (alpha|beta|rc) ]]; then
+          echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          echo "This is a prerelease: $VERSION"
+        else
+          echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          echo "This is a stable release: $VERSION"
+        fi
+
+  test-release:
+    name: Test Before Release
+    runs-on: ubuntu-latest
+    needs: validate-tag
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+    
+    - name: Run full test suite
+      run: |
+        pytest tests/unit/ -v --cov=dataverse_sdk --cov-report=term-missing
+    
+    - name: Test CLI functionality
+      run: |
+        dv-cli --help
+        dv-cli config --help
+        dv-cli entity --help
+    
+    - name: Verify version consistency
+      run: |
+        TAG_VERSION=${{ needs.validate-tag.outputs.version }}
+        PACKAGE_VERSION=$(python -c "from dataverse_sdk import __version__; print(__version__)")
+        echo "Tag version: $TAG_VERSION"
+        echo "Package version: $PACKAGE_VERSION"
+        if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+          echo "Version mismatch! Tag: $TAG_VERSION, Package: $PACKAGE_VERSION"
+          exit 1
+        fi
+
+  build-release:
+    name: Build Release Package
+    runs-on: ubuntu-latest
+    needs: [validate-tag, test-release]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+    
+    - name: Build package
+      run: |
+        python -m build
+    
+    - name: Check package
+      run: |
+        twine check dist/*
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-dist
+        path: dist/
+
+  publish-testpypi:
+    name: Publish to TestPyPI
+    runs-on: ubuntu-latest
+    needs: [validate-tag, build-release]
+    if: needs.validate-tag.outputs.is_prerelease == 'true'
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/dataverse-sdk
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-dist
+        path: dist/
+    
+    - name: Publish to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+        password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        verbose: true
+
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: [validate-tag, build-release]
+    if: needs.validate-tag.outputs.is_prerelease == 'false'
+    environment:
+      name: pypi
+      url: https://pypi.org/p/dataverse-sdk
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-dist
+        path: dist/
+    
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        verbose: true
+
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate-tag, build-release]
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch full history for changelog
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-dist
+        path: dist/
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Get the previous tag
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+        
+        if [ -n "$PREVIOUS_TAG" ]; then
+          echo "Generating changelog from $PREVIOUS_TAG to ${{ github.ref_name }}"
+          CHANGELOG=$(git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..${{ github.ref_name }})
+        else
+          echo "No previous tag found, using all commits"
+          CHANGELOG=$(git log --pretty=format:"- %s (%h)")
+        fi
+        
+        # Save changelog to file
+        echo "## Changes" > changelog.md
+        echo "" >> changelog.md
+        echo "$CHANGELOG" >> changelog.md
+        
+        # Also save for GitHub output (truncated)
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGELOG" | head -20 >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ needs.validate-tag.outputs.version }}
+        body: |
+          # Dataverse SDK ${{ needs.validate-tag.outputs.version }}
+          
+          ## Installation
+          ```bash
+          pip install dataverse-sdk==${{ needs.validate-tag.outputs.version }}
+          ```
+          
+          ## Changes
+          ${{ steps.changelog.outputs.changelog }}
+          
+          ## Assets
+          - **Source code**: Available as zip and tar.gz
+          - **Python wheel**: `dataverse_sdk-${{ needs.validate-tag.outputs.version }}-py3-none-any.whl`
+          - **Source distribution**: `dataverse-sdk-${{ needs.validate-tag.outputs.version }}.tar.gz`
+          
+          ## Documentation
+          - [README](https://github.com/dataverse-sdk/dataverse-sdk/blob/v${{ needs.validate-tag.outputs.version }}/README.md)
+          - [API Documentation](https://dataverse-sdk.readthedocs.io/en/v${{ needs.validate-tag.outputs.version }}/)
+          
+          ## Support
+          - [Issues](https://github.com/dataverse-sdk/dataverse-sdk/issues)
+          - [Discussions](https://github.com/dataverse-sdk/dataverse-sdk/discussions)
+        draft: false
+        prerelease: ${{ needs.validate-tag.outputs.is_prerelease == 'true' }}
+    
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/
+        asset_name: release-assets
+        asset_content_type: application/zip
+
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [validate-tag, create-github-release, publish-pypi]
+    if: always() && (needs.publish-pypi.result == 'success' || needs.publish-testpypi.result == 'success')
+    
+    steps:
+    - name: Notify Slack (if configured)
+      if: env.SLACK_WEBHOOK_URL != ''
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"🚀 Dataverse SDK ${{ needs.validate-tag.outputs.version }} has been released!\"}" \
+          $SLACK_WEBHOOK_URL
+    
+    - name: Notify Discord (if configured)
+      if: env.DISCORD_WEBHOOK_URL != ''
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+          --data "{\"content\":\"🚀 Dataverse SDK ${{ needs.validate-tag.outputs.version }} has been released! https://pypi.org/project/dataverse-sdk/${{ needs.validate-tag.outputs.version }}/\"}" \
+          $DISCORD_WEBHOOK_URL
+
+  update-docs:
+    name: Update Documentation
+    runs-on: ubuntu-latest
+    needs: [validate-tag, publish-pypi]
+    if: needs.publish-pypi.result == 'success'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[docs]"
+    
+    - name: Build documentation
+      run: |
+        cd docs
+        make html
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html
+        cname: dataverse-sdk.readthedocs.io
+

@@ -1,0 +1,176 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dataverse-sdk"
+version = "1.0.0"
+description = "Async Python SDK for Microsoft Dataverse with enterprise features"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Dataverse SDK Team", email = "team@dataverse-sdk.com"}
+]
+maintainers = [
+    {name = "Dataverse SDK Team", email = "team@dataverse-sdk.com"}
+]
+keywords = ["dataverse", "dynamics", "crm", "microsoft", "async", "sdk"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Framework :: AsyncIO",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "httpx>=0.25.0",
+    "msal>=1.24.0",
+    "pydantic>=2.0.0",
+    "typer[all]>=0.9.0",
+    "rich>=13.0.0",
+    "aiofiles>=23.0.0",
+    "tenacity>=8.2.0",
+    "structlog>=23.0.0",
+    "pandas>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "xmltodict>=0.13.0",
+    "orjson>=3.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.4.0",
+    "bandit>=1.7.5",
+    "safety>=2.3.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.2.0",
+    "mkdocstrings[python]>=0.23.0",
+]
+telemetry = [
+    "opentelemetry-api>=1.20.0",
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-instrumentation-httpx>=0.41b0",
+]
+
+[project.urls]
+Homepage = "https://github.com/dataverse-sdk/dataverse-sdk"
+Documentation = "https://dataverse-sdk.readthedocs.io"
+Repository = "https://github.com/dataverse-sdk/dataverse-sdk"
+"Bug Tracker" = "https://github.com/dataverse-sdk/dataverse-sdk/issues"
+Changelog = "https://github.com/dataverse-sdk/dataverse-sdk/blob/main/CHANGELOG.md"
+
+[project.scripts]
+dv-cli = "cli.main:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dataverse_sdk*", "cli*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+dataverse_sdk = ["py.typed"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["dataverse_sdk", "cli"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "msal.*",
+    "xmltodict.*",
+    "orjson.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["dataverse_sdk", "cli"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/.*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B601"]
+
