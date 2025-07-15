@@ -108,19 +108,37 @@ class DataverseSDK:
             config: Configuration object (optional)
             hook_manager: Hook manager for extensibility (optional)
         """
-        # Load configuration from environment if not provided
-        self.dataverse_url = dataverse_url or os.getenv("DATAVERSE_URL")
-        self.client_id = client_id or os.getenv("AZURE_CLIENT_ID")
-        self.client_secret = client_secret or os.getenv("AZURE_CLIENT_SECRET")
-        self.tenant_id = tenant_id or os.getenv("AZURE_TENANT_ID")
-        self.authority = authority or os.getenv("AZURE_AUTHORITY")
-        self.scope = scope or os.getenv("AZURE_SCOPE")
+        # Try to load configuration from file if not provided
+        config_data = {}
+        if not all([dataverse_url, client_id, tenant_id]):
+            config_data = self._load_config_file()
+        
+        # Load configuration from parameters, environment, or config file
+        self.dataverse_url = dataverse_url or os.getenv("DATAVERSE_URL") or config_data.get("dataverse_url")
+        self.client_id = client_id or os.getenv("AZURE_CLIENT_ID") or config_data.get("client_id")
+        self.client_secret = client_secret or os.getenv("AZURE_CLIENT_SECRET") or config_data.get("client_secret")
+        self.tenant_id = tenant_id or os.getenv("AZURE_TENANT_ID") or config_data.get("tenant_id")
+        self.authority = authority or os.getenv("AZURE_AUTHORITY") or config_data.get("authority")
+        self.scope = scope or os.getenv("AZURE_SCOPE") or config_data.get("scope")
+        
+        # Ensure dataverse_url has proper format
+        if self.dataverse_url and not self.dataverse_url.startswith(('http://', 'https://')):
+            self.dataverse_url = f"https://{self.dataverse_url}"
         
         # Validate required configuration
         if not all([self.dataverse_url, self.client_id, self.tenant_id]):
+            missing_configs = []
+            if not self.dataverse_url:
+                missing_configs.append("dataverse_url")
+            if not self.client_id:
+                missing_configs.append("client_id")
+            if not self.tenant_id:
+                missing_configs.append("tenant_id")
+            
             raise ConfigurationError(
-                "Missing required configuration. Please provide dataverse_url, "
-                "client_id, and tenant_id either as parameters or environment variables."
+                f"Missing required configuration: {', '.join(missing_configs)}. "
+                "Please provide them as parameters, environment variables, or in a "
+                "dataverse-config.json file in the current directory."
             )
         
         # Initialize components
@@ -584,6 +602,52 @@ class DataverseSDK:
         """
         endpoint = f"EntityDefinitions(LogicalName='{entity_type}')/Attributes(LogicalName='{attribute_name}')"
         return await self.client.get(endpoint)
+    
+    
+    def _load_config_file(self) -> Dict[str, Any]:
+        """
+        Load configuration from dataverse-config.json file.
+        
+        Searches for configuration file in multiple locations:
+        1. Current working directory
+        2. User home directory
+        3. XDG config directory
+        
+        Returns:
+            Configuration dictionary or empty dict if no file found
+        """
+        import json
+        from pathlib import Path
+        
+        # Possible config file locations
+        config_locations = [
+            Path.cwd() / "dataverse-config.json",
+            Path.home() / ".dataverse-config.json",
+            Path.home() / ".config" / "dataverse" / "config.json",
+        ]
+        
+        for config_path in config_locations:
+            if config_path.exists():
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        config_data = json.load(f)
+                    
+                    logger.info(
+                        "Configuration loaded from file",
+                        config_file=str(config_path)
+                    )
+                    return config_data
+                    
+                except (json.JSONDecodeError, IOError) as e:
+                    logger.warning(
+                        "Failed to load configuration file",
+                        config_file=str(config_path),
+                        error=str(e)
+                    )
+                    continue
+        
+        logger.debug("No configuration file found in standard locations")
+        return {}
     
     # Utility Methods
     
