@@ -55,16 +55,40 @@ cli_config = CLIConfig()
 
 def load_config(config_file: Optional[Path] = None) -> None:
     """Load configuration from file or environment."""
-    if config_file and config_file.exists():
-        with open(config_file) as f:
-            config_data = json.load(f)
-        
-        cli_config.dataverse_url = config_data.get("dataverse_url")
-        cli_config.client_id = config_data.get("client_id")
-        cli_config.client_secret = config_data.get("client_secret")
-        cli_config.tenant_id = config_data.get("tenant_id")
+    # Try to load from specified config file or default locations
+    config_paths = []
     
-    # Override with environment variables
+    if config_file:
+        config_paths.append(config_file)
+    
+    # Add default config file locations
+    config_paths.extend([
+        Path("dataverse-config.json"),  # Current directory
+        Path.home() / ".dataverse-config.json",  # Home directory
+        Path.home() / ".config" / "dataverse" / "config.json",  # XDG config
+    ])
+    
+    # Try to load from the first existing config file
+    for config_path in config_paths:
+        if config_path.exists():
+            try:
+                with open(config_path) as f:
+                    config_data = json.load(f)
+                
+                cli_config.dataverse_url = config_data.get("dataverse_url")
+                cli_config.client_id = config_data.get("client_id")
+                cli_config.client_secret = config_data.get("client_secret")
+                cli_config.tenant_id = config_data.get("tenant_id")
+                
+                if cli_config.verbose:
+                    console.print(f"[dim]Loaded configuration from {config_path}[/dim]")
+                break
+            except (json.JSONDecodeError, IOError) as e:
+                if cli_config.verbose:
+                    console.print(f"[yellow]Warning: Could not load config from {config_path}: {e}[/yellow]")
+                continue
+    
+    # Override with environment variables (they take precedence)
     cli_config.dataverse_url = os.getenv("DATAVERSE_URL", cli_config.dataverse_url)
     cli_config.client_id = os.getenv("AZURE_CLIENT_ID", cli_config.client_id)
     cli_config.client_secret = os.getenv("AZURE_CLIENT_SECRET", cli_config.client_secret)
@@ -561,6 +585,11 @@ def data_export(
     asyncio.run(export_data())
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the CLI."""
     app()
+
+
+if __name__ == "__main__":
+    main()
 

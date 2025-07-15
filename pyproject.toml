@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crmadminbrasil-dataverse-sdk"
-version = "1.0.0"
+version = "1.0.2"
 description = "Async Python SDK for Microsoft Dataverse with enterprise features"
 readme = "README.md"
 license = {text = "MIT"}
@@ -79,7 +79,7 @@ Repository = "https://github.com/dataverse-sdk/dataverse-sdk"
 Changelog = "https://github.com/dataverse-sdk/dataverse-sdk/blob/main/CHANGELOG.md"
 
 [project.scripts]
-dv-cli = "cli.main:app"
+dv-cli = "cli.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
