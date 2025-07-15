@@ -9,7 +9,7 @@ description: "Modern, async Python SDK for Microsoft Dataverse with enterprise-g
 [![PyPI version](https://badge.fury.io/py/crmadminbrasil-dataverse-sdk.svg)](https://pypi.org/project/crmadminbrasil-dataverse-sdk/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/joseandrefilho/dataverse-sdk-python.svg)](https://github.com/joseandrefilho/dataverse-sdk-python/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/joseandrefilho/crmadminbrasil-dataverse-sdk.svg)](https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/stargazers)
 
 Um SDK Python **moderno e assíncrono** para Microsoft Dataverse, projetado para aplicações enterprise com foco em **performance**, **confiabilidade** e **facilidade de uso**.
 
@@ -216,15 +216,15 @@ Este projeto está licenciado sob a [Licença MIT](LICENSE).
 
 ## 🆘 Suporte
 
-- **Issues**: [GitHub Issues](https://github.com/joseandrefilho/dataverse-sdk-python/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/joseandrefilho/dataverse-sdk-python/discussions)
+- **Issues**: [GitHub Issues](https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/discussions)
 - **Documentação**: [Guia Completo](docs/)
 
 ## 🔗 Links Úteis
 
 - **PyPI Package**: [crmadminbrasil-dataverse-sdk](https://pypi.org/project/crmadminbrasil-dataverse-sdk/)
-- **GitHub Repository**: [dataverse-sdk-python](https://github.com/joseandrefilho/dataverse-sdk-python)
-- **Documentação Completa**: [GitHub Pages](https://joseandrefilho.github.io/dataverse-sdk-python/)
+- **GitHub Repository**: [dataverse-sdk-python](https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk)
+- **Documentação Completa**: [GitHub Pages](https://joseandrefilho.github.io/crmadminbrasil-dataverse-sdk/)
 - **Microsoft Dataverse**: [Documentação Oficial](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/)
 
 ---

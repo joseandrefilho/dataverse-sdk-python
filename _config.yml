@@ -3,7 +3,7 @@
 # Site settings
 title: "Microsoft Dataverse SDK for Python"
 description: "Modern, async Python SDK for Microsoft Dataverse with enterprise-grade features"
-baseurl: "/dataverse-sdk-python"
+baseurl: "/crmadminbrasil-dataverse-sdk"
 url: "https://joseandrefilho.github.io"
 
 # Author information
@@ -13,7 +13,7 @@ author:
   github: "joseandrefilho"
 
 # Repository information
-repository: "joseandrefilho/dataverse-sdk-python"
+repository: "joseandrefilho/crmadminbrasil-dataverse-sdk"
 github_username: "joseandrefilho"
 
 # Theme and appearance

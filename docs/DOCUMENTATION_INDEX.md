@@ -9,7 +9,7 @@ O **crmadminbrasil-dataverse-sdk** é um SDK Python moderno e assíncrono para M
 ### 🚀 Links Rápidos
 
 - **PyPI**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
-- **GitHub**: https://github.com/joseandrefilho/dataverse-sdk-python
+- **GitHub**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk
 - **Instalação**: `pip install crmadminbrasil-dataverse-sdk`
 
 ## 📖 Documentação por Categoria
@@ -200,8 +200,8 @@ Veja [CONTRIBUTING.md](../CONTRIBUTING.md) para mais detalhes.
 
 ## 📞 Suporte
 
-- **Issues**: https://github.com/joseandrefilho/dataverse-sdk-python/issues
-- **Discussions**: https://github.com/joseandrefilho/dataverse-sdk-python/discussions
+- **Issues**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/issues
+- **Discussions**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/discussions
 - **Email**: Através do GitHub
 
 ## 🏷️ Tags e Versões

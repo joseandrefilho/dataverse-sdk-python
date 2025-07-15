@@ -412,7 +412,7 @@ Agora que você tem o básico funcionando:
 ## 📚 Recursos Úteis
 
 - **PyPI Package**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
-- **GitHub Repository**: https://github.com/joseandrefilho/dataverse-sdk-python
+- **GitHub Repository**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk
 - **Dataverse Web API Docs**: https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/
 
 ---

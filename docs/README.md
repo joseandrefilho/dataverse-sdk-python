@@ -46,9 +46,9 @@ Bem-vindo à documentação completa do **crmadminbrasil-dataverse-sdk**, um SDK
 ## 🎯 Links Rápidos
 
 - **PyPI Package**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
-- **GitHub Repository**: https://github.com/joseandrefilho/dataverse-sdk-python
-- **Issues & Bug Reports**: https://github.com/joseandrefilho/dataverse-sdk-python/issues
-- **Discussions**: https://github.com/joseandrefilho/dataverse-sdk-python/discussions
+- **GitHub Repository**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk
+- **Issues & Bug Reports**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/issues
+- **Discussions**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/discussions
 
 ## 📦 Instalação Rápida
 
@@ -88,7 +88,7 @@ asyncio.run(main())
 1. **Consulte a documentação** - Comece com [Getting Started](getting-started/)
 2. **Veja os exemplos** - Confira [Examples](examples/)
 3. **Problemas?** - Consulte [Troubleshooting](troubleshooting/)
-4. **Ainda com dúvidas?** - Abra uma [issue](https://github.com/joseandrefilho/dataverse-sdk-python/issues)
+4. **Ainda com dúvidas?** - Abra uma [issue](https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/issues)
 
 ---
 

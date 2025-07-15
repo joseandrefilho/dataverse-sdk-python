@@ -120,7 +120,7 @@ services:
 
 ```bash
 # Clonar repositório
-git clone https://github.com/joseandrefilho/dataverse-sdk-python.git
+git clone https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk.git
 cd dataverse-sdk-python
 
 # Instalar em modo desenvolvimento
@@ -134,7 +134,7 @@ pip install -e ".[dev]"
 
 ```bash
 # Baixar e extrair
-wget https://github.com/joseandrefilho/dataverse-sdk-python/archive/main.zip
+wget https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk/archive/main.zip
 unzip main.zip
 cd dataverse-sdk-python-main
 

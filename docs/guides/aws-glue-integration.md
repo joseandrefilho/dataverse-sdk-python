@@ -835,7 +835,7 @@ async def chunked_processing(data, chunk_size=100):
 
 - **AWS Glue Documentation**: https://docs.aws.amazon.com/glue/
 - **Dataverse Web API**: https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/
-- **SDK GitHub**: https://github.com/joseandrefilho/dataverse-sdk-python
+- **SDK GitHub**: https://github.com/joseandrefilho/crmadminbrasil-dataverse-sdk
 - **PyPI Package**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
 
 ---
