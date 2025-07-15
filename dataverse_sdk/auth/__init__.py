@@ -152,8 +152,8 @@ class DataverseAuthenticator:
     def _get_msal_app(self) -> ConfidentialClientApplication | PublicClientApplication:
         """Get or create MSAL application instance."""
         if self._app is None:
-            # Configure SSL and proxy settings globally for MSAL
-            self._configure_global_ssl_proxy()
+            # Configurar SSL e proxy ANTES de criar o app MSAL
+            self._configure_ssl_and_proxy_environment()
             
             if self.client_secret:
                 # Confidential client (with secret)
@@ -173,45 +173,15 @@ class DataverseAuthenticator:
         
         return self._app
     
-    def _configure_global_ssl_proxy(self) -> None:
-        """Configure global SSL and proxy settings for MSAL and other HTTP libraries."""
+    def _configure_ssl_and_proxy_environment(self) -> None:
+        """Configure SSL and proxy environment variables before MSAL initialization."""
         import os
-        import ssl
-        import urllib3
         
-        # Configure SSL settings
-        if not self.verify_ssl:
-            # Disable SSL warnings if requested
-            if self.disable_ssl_warnings:
-                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-            
-            # Create unverified SSL context
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            
-            # Monkey patch urllib3 to use our SSL context
-            try:
-                original_create_urllib3_context = urllib3.util.ssl_.create_urllib3_context
-                
-                def patched_create_urllib3_context(*args, **kwargs):
-                    return ssl_context
-                
-                urllib3.util.ssl_.create_urllib3_context = patched_create_urllib3_context
-                logger.debug("SSL verification disabled via monkey patching")
-            except Exception as e:
-                logger.warning("Failed to monkey patch SSL context", error=str(e))
-            
-            # Also try to set environment variables for requests/urllib3
-            os.environ['PYTHONHTTPSVERIFY'] = '0'
-            os.environ['CURL_CA_BUNDLE'] = ''
-            os.environ['REQUESTS_CA_BUNDLE'] = ''
-        
-        # Configure proxy settings via environment variables (MSAL respects these)
+        # Configurar proxy se fornecido
         if self.proxy_url:
             proxy_url = self.proxy_url
             
-            # Add authentication if provided
+            # Adicionar autenticação se fornecida
             if self.proxy_username and self.proxy_password:
                 from urllib.parse import urlparse, urlunparse
                 parsed = urlparse(self.proxy_url)
@@ -224,13 +194,72 @@ class DataverseAuthenticator:
                     parsed.fragment
                 ))
             
-            # Set proxy environment variables
+            # Configurar variáveis de ambiente de proxy
             os.environ['HTTP_PROXY'] = proxy_url
             os.environ['HTTPS_PROXY'] = proxy_url
             os.environ['http_proxy'] = proxy_url
             os.environ['https_proxy'] = proxy_url
             
-            logger.debug("Proxy configured via environment variables", proxy_url=self.proxy_url)
+            logger.debug("Proxy environment configured", proxy_url=self.proxy_url)
+        
+        # Configurar SSL se desabilitado
+        if not self.verify_ssl:
+            # Configurar variáveis de ambiente para desabilitar SSL
+            os.environ['PYTHONHTTPSVERIFY'] = '0'
+            os.environ['CURL_CA_BUNDLE'] = ''
+            os.environ['REQUESTS_CA_BUNDLE'] = ''
+            
+            # Desabilitar warnings SSL se solicitado
+            if self.disable_ssl_warnings:
+                import urllib3
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                import warnings
+                warnings.filterwarnings('ignore', message='Unverified HTTPS request')
+            
+            logger.debug("SSL verification disabled via environment variables")
+    
+    async def get_access_token(self) -> str:
+        """
+        Get access token using the configured authentication method.
+        This method mimics the working implementation shown by the user.
+        
+        Returns:
+            Access token string
+            
+        Raises:
+            AuthenticationError: If authentication fails
+        """
+        try:
+            # Configurar ambiente antes de obter token
+            self._configure_ssl_and_proxy_environment()
+            
+            # Obter token usando client credentials
+            app = self._get_msal_app()
+            
+            # Tentar obter token do cache primeiro
+            cache_key = self._get_cache_key("client_credentials")
+            cached_token = await self._token_cache.get_token(cache_key)
+            if cached_token:
+                logger.debug("Using cached access token")
+                return cached_token["access_token"]
+            
+            # Obter novo token
+            result = app.acquire_token_for_client(scopes=[self.scope])
+            
+            if "access_token" not in result:
+                error_msg = result.get("error_description", "Unknown authentication error")
+                logger.error("Failed to get access token", error=error_msg)
+                raise AuthenticationError(f"Authentication failed: {error_msg}")
+            
+            # Cache do token
+            await self._token_cache.set_token(cache_key, result)
+            
+            logger.info("Access token obtained successfully")
+            return result["access_token"]
+            
+        except Exception as e:
+            logger.error("Failed to get access token", error=str(e))
+            raise AuthenticationError(f"Authentication error: {str(e)}") from e
     
     def _get_cache_key(self, flow_type: str, **kwargs: Any) -> str:
         """Generate cache key for token storage."""
@@ -403,7 +432,7 @@ class DataverseAuthenticator:
             ConfigurationError: If flow is not supported or configured incorrectly
         """
         if flow == "client_credentials":
-            return await self.authenticate_client_credentials()
+            return await self.get_access_token()
         elif flow == "device_code":
             return await self.authenticate_device_code()
         elif flow == "interactive":

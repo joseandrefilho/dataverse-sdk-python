@@ -5,6 +5,20 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2025-07-15
+
+### ✅ Fixed
+- **SSL Corporativo**: Implementada abordagem baseada no código funcional do usuário
+- **Método get_access_token()**: Adicionado método direto para obter token de acesso
+- **Configuração de Ambiente**: SSL e proxy configurados via variáveis de ambiente antes da inicialização do MSAL
+- **Ordem de Configuração**: SSL/proxy aplicados ANTES da criação do cliente MSAL
+- **Compatibilidade**: Funciona perfeitamente em ambientes corporativos com proxy e SSL desabilitado
+
+### 🔧 Improved
+- **Autenticação**: Processo mais robusto e confiável
+- **Logs**: Melhor rastreamento do processo de autenticação
+- **Cache**: Otimização do cache de tokens
+
 ## [1.1.2] - 2025-07-15
 
 ### Fixed
