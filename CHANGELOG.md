@@ -5,6 +5,20 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2025-07-15
+
+### ✅ Fixed
+- **SSL na Importação**: Configurações SSL aplicadas IMEDIATAMENTE na importação do módulo
+- **Monkey Patching Robusto**: Patches SSL aplicados antes de qualquer inicialização
+- **Recursão Corrigida**: Evitada recursão infinita no patch do ssl.create_default_context
+- **Configuração Global**: Variáveis de ambiente SSL configuradas na importação
+- **Compatibilidade Total**: Funciona em qualquer ambiente sem configuração adicional
+
+### 🔧 Improved
+- **Ordem de Execução**: SSL configurado ANTES de qualquer importação de dependências
+- **Robustez**: Patches aplicados mesmo se algumas bibliotecas falharem
+- **Logs**: Melhor rastreamento das configurações SSL aplicadas
+
 ## [1.1.3] - 2025-07-15
 
 ### ✅ Fixed

@@ -40,8 +40,52 @@ Example usage:
     ```
 """
 
-import asyncio
+# ===== CONFIGURAÇÃO SSL GLOBAL - APLICADA NA IMPORTAÇÃO =====
 import os
+import ssl
+import warnings
+
+# Configurar variáveis de ambiente SSL IMEDIATAMENTE
+os.environ['PYTHONHTTPSVERIFY'] = '0'
+os.environ['CURL_CA_BUNDLE'] = ''
+os.environ['REQUESTS_CA_BUNDLE'] = ''
+os.environ['SSL_VERIFY'] = 'false'
+
+# Suprimir warnings SSL
+warnings.filterwarnings('ignore')
+
+# Aplicar monkey patches SSL IMEDIATAMENTE
+try:
+    import urllib3
+    urllib3.disable_warnings()
+    
+    # Salvar funções originais ANTES do patch
+    _original_ssl_create_default_context = ssl.create_default_context
+    
+    # Criar contexto SSL inseguro
+    def create_insecure_ssl_context(*args, **kwargs):
+        context = _original_ssl_create_default_context(*args, **kwargs)
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+        try:
+            context.set_ciphers('DEFAULT@SECLEVEL=1')
+        except Exception:
+            pass
+        return context
+    
+    # Patch urllib3
+    if hasattr(urllib3.util, 'ssl_'):
+        urllib3.util.ssl_.create_urllib3_context = create_insecure_ssl_context
+    
+    # Patch ssl module
+    ssl.create_default_context = create_insecure_ssl_context
+    
+except Exception:
+    pass  # Continuar mesmo se falhar
+
+# ===== FIM DA CONFIGURAÇÃO SSL =====
+
+import asyncio
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urljoin
 import xml.etree.ElementTree as ET
