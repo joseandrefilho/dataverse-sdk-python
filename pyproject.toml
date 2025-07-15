@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dataverse-sdk"
+name = "jaf-dataverse-2025"
 version = "1.0.0"
 description = "Async Python SDK for Microsoft Dataverse with enterprise features"
 readme = "README.md"
