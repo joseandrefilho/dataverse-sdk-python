@@ -1,0 +1,155 @@
+# GitHub Pages Configuration for jaf-dataverse-2025 SDK Documentation
+
+# Site settings
+title: "Microsoft Dataverse SDK for Python"
+description: "Modern, async Python SDK for Microsoft Dataverse with enterprise-grade features"
+baseurl: "/dataverse-sdk-python"
+url: "https://joseandrefilho.github.io"
+
+# Author information
+author:
+  name: "José André Filho"
+  email: "joseandrefilho@users.noreply.github.com"
+  github: "joseandrefilho"
+
+# Repository information
+repository: "joseandrefilho/dataverse-sdk-python"
+github_username: "joseandrefilho"
+
+# Theme and appearance
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+  - jekyll-relative-links
+
+# Markdown processing
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+
+# Collections for documentation
+collections:
+  getting-started:
+    output: true
+    permalink: /:collection/:name/
+  tutorials:
+    output: true
+    permalink: /:collection/:name/
+  guides:
+    output: true
+    permalink: /:collection/:name/
+  api-reference:
+    output: true
+    permalink: /:collection/:name/
+  examples:
+    output: true
+    permalink: /:collection/:name/
+  troubleshooting:
+    output: true
+    permalink: /:collection/:name/
+
+# Navigation
+header_pages:
+  - docs/README.md
+  - docs/getting-started/quickstart.md
+  - docs/guides/aws-glue-integration.md
+  - docs/api-reference/dataverse-sdk.md
+
+# Social links
+social:
+  - platform: github
+    user_url: "https://github.com/joseandrefilho"
+  - platform: pypi
+    user_url: "https://pypi.org/project/jaf-dataverse-2025/"
+
+# SEO and metadata
+lang: en-US
+timezone: America/Sao_Paulo
+
+# GitHub Pages specific
+github: [metadata]
+
+# Exclude files from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .pytest_cache/
+  - __pycache__/
+  - "*.pyc"
+  - .git/
+  - .github/
+  - tests/
+  - scripts/
+  - .env*
+  - requirements*.txt
+  - setup.py
+  - pyproject.toml
+
+# Include files
+include:
+  - docs/
+  - README.md
+  - LICENSE
+
+# Sass configuration
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Pagination
+paginate: 10
+paginate_path: "/page:num/"
+
+# Defaults for front matter
+defaults:
+  - scope:
+      path: "docs"
+    values:
+      layout: "page"
+  - scope:
+      path: "docs/getting-started"
+    values:
+      layout: "page"
+      category: "Getting Started"
+  - scope:
+      path: "docs/tutorials"
+    values:
+      layout: "page"
+      category: "Tutorials"
+  - scope:
+      path: "docs/guides"
+    values:
+      layout: "page"
+      category: "Guides"
+  - scope:
+      path: "docs/api-reference"
+    values:
+      layout: "page"
+      category: "API Reference"
+  - scope:
+      path: "docs/examples"
+    values:
+      layout: "page"
+      category: "Examples"
+  - scope:
+      path: "docs/troubleshooting"
+    values:
+      layout: "page"
+      category: "Troubleshooting"
+
