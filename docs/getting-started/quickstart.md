@@ -1,11 +1,11 @@
 # Quick Start Guide
 
-Este guia mostra como começar a usar o **jaf-dataverse-2025** SDK em poucos minutos.
+Este guia mostra como começar a usar o **crmadminbrasil-dataverse-sdk** SDK em poucos minutos.
 
 ## 🚀 Instalação Rápida
 
 ```bash
-pip install jaf-dataverse-2025
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ## 🔑 Configuração Básica
@@ -411,11 +411,11 @@ Agora que você tem o básico funcionando:
 
 ## 📚 Recursos Úteis
 
-- **PyPI Package**: https://pypi.org/project/jaf-dataverse-2025/
+- **PyPI Package**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
 - **GitHub Repository**: https://github.com/joseandrefilho/dataverse-sdk-python
 - **Dataverse Web API Docs**: https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/
 
 ---
 
-**🎉 Parabéns! Você está pronto para usar o jaf-dataverse-2025 SDK!**
+**🎉 Parabéns! Você está pronto para usar o crmadminbrasil-dataverse-sdk SDK!**
 

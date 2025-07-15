@@ -6,7 +6,7 @@ description: "Modern, async Python SDK for Microsoft Dataverse with enterprise-g
 
 # Microsoft Dataverse SDK for Python
 
-[![PyPI version](https://badge.fury.io/py/jaf-dataverse-2025.svg)](https://pypi.org/project/jaf-dataverse-2025/)
+[![PyPI version](https://badge.fury.io/py/crmadminbrasil-dataverse-sdk.svg)](https://pypi.org/project/crmadminbrasil-dataverse-sdk/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/joseandrefilho/dataverse-sdk-python.svg)](https://github.com/joseandrefilho/dataverse-sdk-python/stargazers)
@@ -16,7 +16,7 @@ Um SDK Python **moderno e assíncrono** para Microsoft Dataverse, projetado para
 ## 🚀 Instalação Rápida
 
 ```bash
-pip install jaf-dataverse-2025
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ## ⚡ Exemplo Rápido
@@ -185,7 +185,7 @@ dv-cli data export accounts --output accounts.csv --format csv
 
 ## 🌟 Por que escolher este SDK?
 
-| Funcionalidade | jaf-dataverse-2025 | Outros SDKs |
+| Funcionalidade | crmadminbrasil-dataverse-sdk | Outros SDKs |
 |----------------|-------------------|-------------|
 | **Performance** | 100% Async, Pool de conexões | Sync, Conexões individuais |
 | **Bulk Operations** | Auto-chunking, Paralelo | Manual, Sequencial |
@@ -198,7 +198,7 @@ dv-cli data export accounts --output accounts.csv --format csv
 ## 📊 Benchmarks
 
 ```
-Operação                    | jaf-dataverse-2025 | SDK Tradicional
+Operação                    | crmadminbrasil-dataverse-sdk | SDK Tradicional
 ---------------------------|-------------------|----------------
 Criar 1000 registros      | 12s               | 45s
 Consultar 10k registros    | 3s                | 8s
@@ -222,7 +222,7 @@ Este projeto está licenciado sob a [Licença MIT](LICENSE).
 
 ## 🔗 Links Úteis
 
-- **PyPI Package**: [jaf-dataverse-2025](https://pypi.org/project/jaf-dataverse-2025/)
+- **PyPI Package**: [crmadminbrasil-dataverse-sdk](https://pypi.org/project/crmadminbrasil-dataverse-sdk/)
 - **GitHub Repository**: [dataverse-sdk-python](https://github.com/joseandrefilho/dataverse-sdk-python)
 - **Documentação Completa**: [GitHub Pages](https://joseandrefilho.github.io/dataverse-sdk-python/)
 - **Microsoft Dataverse**: [Documentação Oficial](https://docs.microsoft.com/en-us/powerapps/developer/data-platform/)

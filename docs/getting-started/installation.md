@@ -1,6 +1,6 @@
 # Instalação
 
-Este guia mostra como instalar o **jaf-dataverse-2025** SDK em diferentes ambientes.
+Este guia mostra como instalar o **crmadminbrasil-dataverse-sdk** SDK em diferentes ambientes.
 
 ## 📋 Requisitos
 
@@ -20,20 +20,20 @@ Este guia mostra como instalar o **jaf-dataverse-2025** SDK em diferentes ambien
 ### Instalação Básica
 
 ```bash
-pip install jaf-dataverse-2025
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ### Instalação com Dependências Opcionais
 
 ```bash
 # Para desenvolvimento (inclui ferramentas de teste e linting)
-pip install jaf-dataverse-2025[dev]
+pip install crmadminbrasil-dataverse-sdk[dev]
 
 # Para documentação (inclui ferramentas de geração de docs)
-pip install jaf-dataverse-2025[docs]
+pip install crmadminbrasil-dataverse-sdk[docs]
 
 # Instalação completa (todas as dependências)
-pip install jaf-dataverse-2025[all]
+pip install crmadminbrasil-dataverse-sdk[all]
 ```
 
 ## 🐍 Ambientes Virtuais
@@ -51,7 +51,7 @@ source dataverse-env/bin/activate
 dataverse-env\Scripts\activate
 
 # Instalar SDK
-pip install jaf-dataverse-2025
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ### Usando conda
@@ -64,7 +64,7 @@ conda create -n dataverse-env python=3.11
 conda activate dataverse-env
 
 # Instalar SDK
-pip install jaf-dataverse-2025
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ### Usando Poetry
@@ -74,7 +74,7 @@ pip install jaf-dataverse-2025
 poetry init
 
 # Adicionar dependência
-poetry add jaf-dataverse-2025
+poetry add crmadminbrasil-dataverse-sdk
 
 # Instalar dependências
 poetry install
@@ -90,7 +90,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Instalar SDK
-RUN pip install jaf-dataverse-2025
+RUN pip install crmadminbrasil-dataverse-sdk
 
 # Copiar seu código
 COPY . .
@@ -222,8 +222,8 @@ which python
 pip list | grep jaf-dataverse
 
 # Reinstalar se necessário
-pip uninstall jaf-dataverse-2025
-pip install jaf-dataverse-2025
+pip uninstall crmadminbrasil-dataverse-sdk
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ### Erro: "Microsoft Visual C++ 14.0 is required" (Windows)
@@ -231,7 +231,7 @@ pip install jaf-dataverse-2025
 ```bash
 # Instalar Microsoft C++ Build Tools
 # Ou usar versão pré-compilada
-pip install --only-binary=all jaf-dataverse-2025
+pip install --only-binary=all crmadminbrasil-dataverse-sdk
 ```
 
 ### Erro de Dependências
@@ -244,17 +244,17 @@ python -m pip install --upgrade pip
 pip cache purge
 
 # Reinstalar
-pip install --no-cache-dir jaf-dataverse-2025
+pip install --no-cache-dir crmadminbrasil-dataverse-sdk
 ```
 
 ### Problemas de Rede/Proxy
 
 ```bash
 # Configurar proxy
-pip install --proxy http://user:password@proxy.server:port jaf-dataverse-2025
+pip install --proxy http://user:password@proxy.server:port crmadminbrasil-dataverse-sdk
 
 # Usar mirror alternativo
-pip install -i https://pypi.douban.com/simple/ jaf-dataverse-2025
+pip install -i https://pypi.douban.com/simple/ crmadminbrasil-dataverse-sdk
 ```
 
 ## 🔄 Atualizações
@@ -263,7 +263,7 @@ pip install -i https://pypi.douban.com/simple/ jaf-dataverse-2025
 
 ```bash
 # Verificar versão atual
-pip show jaf-dataverse-2025
+pip show crmadminbrasil-dataverse-sdk
 
 # Verificar se há atualizações
 pip list --outdated | grep jaf-dataverse
@@ -273,10 +273,10 @@ pip list --outdated | grep jaf-dataverse
 
 ```bash
 # Atualizar para versão mais recente
-pip install --upgrade jaf-dataverse-2025
+pip install --upgrade crmadminbrasil-dataverse-sdk
 
 # Atualizar para versão específica
-pip install jaf-dataverse-2025==1.1.0
+pip install crmadminbrasil-dataverse-sdk==1.1.0
 ```
 
 ## 📱 Ambientes Específicos
@@ -285,7 +285,7 @@ pip install jaf-dataverse-2025==1.1.0
 
 ```bash
 # Instalar no kernel do Jupyter
-!pip install jaf-dataverse-2025
+!pip install crmadminbrasil-dataverse-sdk
 
 # Verificar instalação
 import dataverse_sdk
@@ -296,7 +296,7 @@ print("✅ SDK disponível no Jupyter")
 
 ```python
 # Instalar no Colab
-!pip install jaf-dataverse-2025
+!pip install crmadminbrasil-dataverse-sdk
 
 # Importar e usar
 from dataverse_sdk import DataverseSDK
@@ -306,7 +306,7 @@ from dataverse_sdk import DataverseSDK
 
 ```bash
 # requirements.txt
-jaf-dataverse-2025>=1.0.0
+crmadminbrasil-dataverse-sdk>=1.0.0
 azure-functions>=1.11.0
 ```
 
@@ -314,7 +314,7 @@ azure-functions>=1.11.0
 
 ```bash
 # Criar layer ou incluir no deployment package
-pip install jaf-dataverse-2025 -t ./package
+pip install crmadminbrasil-dataverse-sdk -t ./package
 ```
 
 ## 🎯 Próximos Passos

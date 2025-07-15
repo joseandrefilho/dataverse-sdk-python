@@ -1,16 +1,16 @@
-# 📚 Documentação Completa - jaf-dataverse-2025
+# 📚 Documentação Completa - crmadminbrasil-dataverse-sdk
 
 Índice abrangente de toda a documentação disponível para o Microsoft Dataverse SDK.
 
 ## 🎯 Visão Geral
 
-O **jaf-dataverse-2025** é um SDK Python moderno e assíncrono para Microsoft Dataverse, projetado para aplicações enterprise com foco em performance, confiabilidade e facilidade de uso.
+O **crmadminbrasil-dataverse-sdk** é um SDK Python moderno e assíncrono para Microsoft Dataverse, projetado para aplicações enterprise com foco em performance, confiabilidade e facilidade de uso.
 
 ### 🚀 Links Rápidos
 
-- **PyPI**: https://pypi.org/project/jaf-dataverse-2025/
+- **PyPI**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
 - **GitHub**: https://github.com/joseandrefilho/dataverse-sdk-python
-- **Instalação**: `pip install jaf-dataverse-2025`
+- **Instalação**: `pip install crmadminbrasil-dataverse-sdk`
 
 ## 📖 Documentação por Categoria
 

@@ -1,10 +1,10 @@
 # AWS Glue Integration Guide
 
-Este guia abrangente mostra como usar o **jaf-dataverse-2025** SDK no AWS Glue para criar pipelines de ETL robustos que integram dados entre o Microsoft Dataverse e outros sistemas.
+Este guia abrangente mostra como usar o **crmadminbrasil-dataverse-sdk** SDK no AWS Glue para criar pipelines de ETL robustos que integram dados entre o Microsoft Dataverse e outros sistemas.
 
 ## 📋 Visão Geral
 
-AWS Glue é um serviço de ETL serverless que permite extrair, transformar e carregar dados entre diferentes fontes. Com o jaf-dataverse-2025 SDK, você pode:
+AWS Glue é um serviço de ETL serverless que permite extrair, transformar e carregar dados entre diferentes fontes. Com o crmadminbrasil-dataverse-sdk SDK, você pode:
 
 - **Extrair dados** do Dataverse para data lakes
 - **Carregar dados** de diversas fontes para o Dataverse
@@ -76,7 +76,7 @@ aws secretsmanager create-secret \
 ```python
 # Job parameters no AWS Glue Console
 {
-    "--additional-python-modules": "jaf-dataverse-2025==1.0.0",
+    "--additional-python-modules": "crmadminbrasil-dataverse-sdk==1.0.0",
     "--python-modules-installer-option": "--upgrade",
     "--enable-metrics": "true",
     "--enable-continuous-cloudwatch-log": "true",
@@ -663,7 +663,7 @@ Resources:
         PythonVersion: '3.9'
         ScriptLocation: s3://your-scripts-bucket/dataverse_etl.py
       DefaultArguments:
-        '--additional-python-modules': 'jaf-dataverse-2025==1.0.0'
+        '--additional-python-modules': 'crmadminbrasil-dataverse-sdk==1.0.0'
         '--secret-name': 'dataverse/credentials'
       MaxRetries: 2
       Timeout: 60
@@ -792,7 +792,7 @@ print(sys.path)
 
 # Forçar reinstalação
 import subprocess
-subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "jaf-dataverse-2025"])
+subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "crmadminbrasil-dataverse-sdk"])
 ```
 
 #### Erro: "Authentication failed"
@@ -836,7 +836,7 @@ async def chunked_processing(data, chunk_size=100):
 - **AWS Glue Documentation**: https://docs.aws.amazon.com/glue/
 - **Dataverse Web API**: https://docs.microsoft.com/en-us/powerapps/developer/data-platform/webapi/
 - **SDK GitHub**: https://github.com/joseandrefilho/dataverse-sdk-python
-- **PyPI Package**: https://pypi.org/project/jaf-dataverse-2025/
+- **PyPI Package**: https://pypi.org/project/crmadminbrasil-dataverse-sdk/
 
 ---
 

@@ -1,11 +1,11 @@
 # Microsoft Dataverse SDK for Python
 
-[![PyPI version](https://badge.fury.io/py/dataverse-sdk.svg)](https://badge.fury.io/py/dataverse-sdk)
-[![Python Support](https://img.shields.io/pypi/pyversions/dataverse-sdk.svg)](https://pypi.org/project/dataverse-sdk/)
+[![PyPI version](https://badge.fury.io/py/crmadminbrasil-crmadminbrasil-dataverse-sdk.svg)](https://pypi.org/project/crmadminbrasil-crmadminbrasil-dataverse-sdk/)
+[![Python Support](https://img.shields.io/pypi/pyversions/crmadminbrasil-crmadminbrasil-dataverse-sdk.svg)](https://pypi.org/project/crmadminbrasil-crmadminbrasil-dataverse-sdk/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Tests](https://github.com/dataverse-sdk/dataverse-sdk/workflows/Tests/badge.svg)](https://github.com/dataverse-sdk/dataverse-sdk/actions)
-[![Coverage](https://codecov.io/gh/dataverse-sdk/dataverse-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/dataverse-sdk/dataverse-sdk)
+[![Tests](https://github.com/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk/workflows/Tests/badge.svg)](https://github.com/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk/actions)
+[![Coverage](https://codecov.io/gh/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk)
 
 A comprehensive, enterprise-ready Python SDK for Microsoft Dataverse with async support, advanced features, and production-grade reliability.
 
@@ -35,26 +35,26 @@ A comprehensive, enterprise-ready Python SDK for Microsoft Dataverse with async 
 
 ### From PyPI (Recommended)
 ```bash
-pip install dataverse-sdk
+pip install crmadminbrasil-dataverse-sdk
 ```
 
 ### Development Installation
 ```bash
-git clone https://github.com/dataverse-sdk/dataverse-sdk.git
-cd dataverse-sdk
+git clone https://github.com/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk.git
+cd crmadminbrasil-dataverse-sdk
 pip install -e ".[dev]"
 ```
 
 ### Optional Dependencies
 ```bash
 # For telemetry support
-pip install "dataverse-sdk[telemetry]"
+pip install "crmadminbrasil-dataverse-sdk[telemetry]"
 
 # For documentation
-pip install "dataverse-sdk[docs]"
+pip install "crmadminbrasil-dataverse-sdk[docs]"
 
 # All optional dependencies
-pip install "dataverse-sdk[dev,telemetry,docs]"
+pip install "crmadminbrasil-dataverse-sdk[dev,telemetry,docs]"
 ```
 
 ## 🔧 Quick Start
@@ -684,7 +684,7 @@ The SDK includes a powerful command-line interface for all operations:
 
 ```bash
 # Install the SDK
-pip install dataverse-sdk
+pip install crmadminbrasil-dataverse-sdk
 
 # Initialize configuration
 dv-cli config init
@@ -1597,8 +1597,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ```bash
 # Clone the repository
-git clone https://github.com/dataverse-sdk/dataverse-sdk.git
-cd dataverse-sdk
+git clone https://github.com/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk.git
+cd crmadminbrasil-dataverse-sdk
 
 # Create virtual environment
 python -m venv venv
@@ -1656,10 +1656,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [https://dataverse-sdk.readthedocs.io](https://dataverse-sdk.readthedocs.io)
-- **Issues**: [GitHub Issues](https://github.com/dataverse-sdk/dataverse-sdk/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/dataverse-sdk/dataverse-sdk/discussions)
-- **Email**: support@dataverse-sdk.com
+- **Documentation**: [https://crmadminbrasil-dataverse-sdk.readthedocs.io](https://crmadminbrasil-dataverse-sdk.readthedocs.io)
+- **Issues**: [GitHub Issues](https://github.com/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/crmadminbrasil-dataverse-sdk/crmadminbrasil-dataverse-sdk/discussions)
+- **Email**: support@crmadminbrasil-dataverse-sdk.com
 
 ## 🗺️ Roadmap
 

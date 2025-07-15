@@ -1,6 +1,6 @@
 # Real-World ETL Scenarios
 
-Este tutorial apresenta cenários reais de ETL usando o **jaf-dataverse-2025** SDK, com foco em casos de uso práticos encontrados em empresas.
+Este tutorial apresenta cenários reais de ETL usando o **crmadminbrasil-dataverse-sdk** SDK, com foco em casos de uso práticos encontrados em empresas.
 
 ## 🏢 Cenário 1: Migração de CRM Legacy para Dataverse
 
@@ -1107,7 +1107,7 @@ class ETLDashboard:
 
 ## 🎯 Conclusão
 
-Estes cenários reais demonstram a versatilidade e poder do **jaf-dataverse-2025** SDK para:
+Estes cenários reais demonstram a versatilidade e poder do **crmadminbrasil-dataverse-sdk** SDK para:
 
 - **Migrações complexas** com preservação de relacionamentos
 - **Sincronizações bidirecionais** entre sistemas
