@@ -5,6 +5,19 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2025-07-15
+
+### Fixed
+- **SSL Global**: Configuração SSL mais robusta com múltiplas variáveis de ambiente
+- **Monkey Patching**: Melhorado monkey patching do urllib3 com tratamento de erros
+- **Configuração Abrangente**: SSL e proxy aplicados globalmente para todos os componentes
+- **Variáveis de Ambiente**: Adicionadas PYTHONHTTPSVERIFY, CURL_CA_BUNDLE, REQUESTS_CA_BUNDLE
+
+### Added
+- **Método _configure_global_ssl_proxy**: Configuração centralizada de SSL/proxy
+- **Logs Detalhados**: Melhor logging para debug de configurações SSL/proxy
+- **Tratamento de Erros**: Try/catch para monkey patching com fallback
+
 ## [1.1.1] - 2025-07-15
 
 ### Fixed

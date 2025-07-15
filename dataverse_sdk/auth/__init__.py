@@ -152,50 +152,8 @@ class DataverseAuthenticator:
     def _get_msal_app(self) -> ConfidentialClientApplication | PublicClientApplication:
         """Get or create MSAL application instance."""
         if self._app is None:
-            # Configure HTTP client for MSAL using environment variables and monkey patching
-            if not self.verify_ssl or self.proxy_url:
-                import ssl
-                import urllib3
-                from urllib3.util.ssl_ import create_urllib3_context
-                
-                # Disable SSL warnings if requested
-                if self.disable_ssl_warnings and not self.verify_ssl:
-                    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-                
-                # Configure SSL context
-                if not self.verify_ssl:
-                    # Create unverified SSL context
-                    ssl_context = ssl.create_default_context()
-                    ssl_context.check_hostname = False
-                    ssl_context.verify_mode = ssl.CERT_NONE
-                    
-                    # Monkey patch urllib3 to use our SSL context
-                    original_create_urllib3_context = urllib3.util.ssl_.create_urllib3_context
-                    
-                    def patched_create_urllib3_context(*args, **kwargs):
-                        return ssl_context
-                    
-                    urllib3.util.ssl_.create_urllib3_context = patched_create_urllib3_context
-                
-                # Configure proxy via environment variables (MSAL respects these)
-                if self.proxy_url:
-                    import os
-                    os.environ['HTTP_PROXY'] = self.proxy_url
-                    os.environ['HTTPS_PROXY'] = self.proxy_url
-                    
-                    if self.proxy_username and self.proxy_password:
-                        from urllib.parse import urlparse, urlunparse
-                        parsed = urlparse(self.proxy_url)
-                        proxy_with_auth = urlunparse((
-                            parsed.scheme,
-                            f"{self.proxy_username}:{self.proxy_password}@{parsed.netloc}",
-                            parsed.path,
-                            parsed.params,
-                            parsed.query,
-                            parsed.fragment
-                        ))
-                        os.environ['HTTP_PROXY'] = proxy_with_auth
-                        os.environ['HTTPS_PROXY'] = proxy_with_auth
+            # Configure SSL and proxy settings globally for MSAL
+            self._configure_global_ssl_proxy()
             
             if self.client_secret:
                 # Confidential client (with secret)
@@ -214,6 +172,65 @@ class DataverseAuthenticator:
                 logger.debug("Created public client application with SSL/proxy config")
         
         return self._app
+    
+    def _configure_global_ssl_proxy(self) -> None:
+        """Configure global SSL and proxy settings for MSAL and other HTTP libraries."""
+        import os
+        import ssl
+        import urllib3
+        
+        # Configure SSL settings
+        if not self.verify_ssl:
+            # Disable SSL warnings if requested
+            if self.disable_ssl_warnings:
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            
+            # Create unverified SSL context
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            # Monkey patch urllib3 to use our SSL context
+            try:
+                original_create_urllib3_context = urllib3.util.ssl_.create_urllib3_context
+                
+                def patched_create_urllib3_context(*args, **kwargs):
+                    return ssl_context
+                
+                urllib3.util.ssl_.create_urllib3_context = patched_create_urllib3_context
+                logger.debug("SSL verification disabled via monkey patching")
+            except Exception as e:
+                logger.warning("Failed to monkey patch SSL context", error=str(e))
+            
+            # Also try to set environment variables for requests/urllib3
+            os.environ['PYTHONHTTPSVERIFY'] = '0'
+            os.environ['CURL_CA_BUNDLE'] = ''
+            os.environ['REQUESTS_CA_BUNDLE'] = ''
+        
+        # Configure proxy settings via environment variables (MSAL respects these)
+        if self.proxy_url:
+            proxy_url = self.proxy_url
+            
+            # Add authentication if provided
+            if self.proxy_username and self.proxy_password:
+                from urllib.parse import urlparse, urlunparse
+                parsed = urlparse(self.proxy_url)
+                proxy_url = urlunparse((
+                    parsed.scheme,
+                    f"{self.proxy_username}:{self.proxy_password}@{parsed.netloc}",
+                    parsed.path,
+                    parsed.params,
+                    parsed.query,
+                    parsed.fragment
+                ))
+            
+            # Set proxy environment variables
+            os.environ['HTTP_PROXY'] = proxy_url
+            os.environ['HTTPS_PROXY'] = proxy_url
+            os.environ['http_proxy'] = proxy_url
+            os.environ['https_proxy'] = proxy_url
+            
+            logger.debug("Proxy configured via environment variables", proxy_url=self.proxy_url)
     
     def _get_cache_key(self, flow_type: str, **kwargs: Any) -> str:
         """Generate cache key for token storage."""
