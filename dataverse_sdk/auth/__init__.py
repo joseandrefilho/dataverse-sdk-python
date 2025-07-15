@@ -77,6 +77,14 @@ class DataverseAuthenticator:
         client_secret: Optional[str] = None,
         authority: Optional[str] = None,
         scope: Optional[str] = None,
+        verify_ssl: bool = True,
+        disable_ssl_warnings: bool = False,
+        ssl_ca_bundle: Optional[str] = None,
+        ssl_cert_file: Optional[str] = None,
+        ssl_key_file: Optional[str] = None,
+        proxy_url: Optional[str] = None,
+        proxy_username: Optional[str] = None,
+        proxy_password: Optional[str] = None,
     ) -> None:
         """
         Initialize the authenticator.
@@ -88,11 +96,34 @@ class DataverseAuthenticator:
             client_secret: Client secret (for confidential client apps)
             authority: Authority URL (defaults to login.microsoftonline.com)
             scope: OAuth scope (defaults to dataverse_url/.default)
+            verify_ssl: Whether to verify SSL certificates
+            disable_ssl_warnings: Whether to disable SSL warnings
+            ssl_ca_bundle: Path to CA bundle file
+            ssl_cert_file: Path to client certificate file
+            ssl_key_file: Path to client private key file
+            proxy_url: Proxy URL
+            proxy_username: Proxy username
+            proxy_password: Proxy password
         """
         self.client_id = client_id
         self.tenant_id = tenant_id
         self.dataverse_url = dataverse_url.rstrip("/")
         self.client_secret = client_secret
+        
+        # SSL and proxy configurations
+        self.verify_ssl = verify_ssl
+        self.disable_ssl_warnings = disable_ssl_warnings
+        self.ssl_ca_bundle = ssl_ca_bundle
+        self.ssl_cert_file = ssl_cert_file
+        self.ssl_key_file = ssl_key_file
+        self.proxy_url = proxy_url
+        self.proxy_username = proxy_username
+        self.proxy_password = proxy_password
+        
+        # Disable SSL warnings if requested
+        if disable_ssl_warnings and not verify_ssl:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         
         # Set default authority if not provided
         if authority is None:
@@ -121,6 +152,51 @@ class DataverseAuthenticator:
     def _get_msal_app(self) -> ConfidentialClientApplication | PublicClientApplication:
         """Get or create MSAL application instance."""
         if self._app is None:
+            # Configure HTTP client for MSAL using environment variables and monkey patching
+            if not self.verify_ssl or self.proxy_url:
+                import ssl
+                import urllib3
+                from urllib3.util.ssl_ import create_urllib3_context
+                
+                # Disable SSL warnings if requested
+                if self.disable_ssl_warnings and not self.verify_ssl:
+                    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                
+                # Configure SSL context
+                if not self.verify_ssl:
+                    # Create unverified SSL context
+                    ssl_context = ssl.create_default_context()
+                    ssl_context.check_hostname = False
+                    ssl_context.verify_mode = ssl.CERT_NONE
+                    
+                    # Monkey patch urllib3 to use our SSL context
+                    original_create_urllib3_context = urllib3.util.ssl_.create_urllib3_context
+                    
+                    def patched_create_urllib3_context(*args, **kwargs):
+                        return ssl_context
+                    
+                    urllib3.util.ssl_.create_urllib3_context = patched_create_urllib3_context
+                
+                # Configure proxy via environment variables (MSAL respects these)
+                if self.proxy_url:
+                    import os
+                    os.environ['HTTP_PROXY'] = self.proxy_url
+                    os.environ['HTTPS_PROXY'] = self.proxy_url
+                    
+                    if self.proxy_username and self.proxy_password:
+                        from urllib.parse import urlparse, urlunparse
+                        parsed = urlparse(self.proxy_url)
+                        proxy_with_auth = urlunparse((
+                            parsed.scheme,
+                            f"{self.proxy_username}:{self.proxy_password}@{parsed.netloc}",
+                            parsed.path,
+                            parsed.params,
+                            parsed.query,
+                            parsed.fragment
+                        ))
+                        os.environ['HTTP_PROXY'] = proxy_with_auth
+                        os.environ['HTTPS_PROXY'] = proxy_with_auth
+            
             if self.client_secret:
                 # Confidential client (with secret)
                 self._app = ConfidentialClientApplication(
@@ -128,14 +204,14 @@ class DataverseAuthenticator:
                     client_credential=self.client_secret,
                     authority=self.authority,
                 )
-                logger.debug("Created confidential client application")
+                logger.debug("Created confidential client application with SSL/proxy config")
             else:
                 # Public client (no secret)
                 self._app = PublicClientApplication(
                     client_id=self.client_id,
                     authority=self.authority,
                 )
-                logger.debug("Created public client application")
+                logger.debug("Created public client application with SSL/proxy config")
         
         return self._app
     

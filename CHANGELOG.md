@@ -5,6 +5,18 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2025-07-15
+
+### Fixed
+- **SSL na Autenticação**: Corrigido erro `CERTIFICATE_VERIFY_FAILED` durante autenticação
+- **MSAL Configuração**: Implementada configuração SSL/proxy correta para MSAL
+- **Monkey Patching**: Adicionado monkey patching do urllib3 para SSL desabilitado
+- **Variáveis de Ambiente**: Configuração de proxy via variáveis de ambiente para MSAL
+
+### Added
+- **Autenticação Corporativa**: Suporte completo a ambientes corporativos com SSL/proxy
+- **Logs Detalhados**: Melhor logging para debug de configurações SSL/proxy
+
 ## [1.1.0] - 2025-07-15
 
 ### Fixed

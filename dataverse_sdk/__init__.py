@@ -206,6 +206,14 @@ class DataverseSDK:
             client_secret=self.client_secret,
             authority=self.authority,
             scope=self.scope,
+            verify_ssl=self.config.get("verify_ssl", True),
+            disable_ssl_warnings=self.config.get("disable_ssl_warnings", False),
+            ssl_ca_bundle=self.config.get("ssl_ca_bundle"),
+            ssl_cert_file=self.config.get("ssl_cert_file"),
+            ssl_key_file=self.config.get("ssl_key_file"),
+            proxy_url=self.config.get("proxy_url"),
+            proxy_username=self.config.get("proxy_username"),
+            proxy_password=self.config.get("proxy_password"),
         )
         
         # Initialize client
